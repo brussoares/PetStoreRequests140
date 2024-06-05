@@ -3,6 +3,8 @@ import json         # leitor e escritor de arquivos json
 import pytest       # engine / framework de teste de unidade
 import requests     # framework de teste de API
 
+from utils.utils  import ler_csv  # importar a função de leitura do csv
+
 # 2 - classe (opcional no Python, em muitos casos)
  
 # 2.1 - atributos ou variaveis
@@ -109,4 +111,49 @@ def test_delete_pet():
     assert response_body['code'] == 200
     assert response_body['type'] == 'unknown'
     assert response_body['message'] == str(pet_id)
+
+
+@pytest.mark.parametrize('pet_id,category_id,category_name,pet_name,tags,status',
+                         ler_csv('./fixtures/csv/pets.csv'))   
+def test_post_pet_dinamico(pet_id,category_id,category_name,pet_name,tags,status):
+    #configura
     
+    pet = {}    # cria uma lista vazia chamada pet
+    pet['id'] = pet_id
+    pet['category'] = {}
+    pet['category']['id'] = int(category_id)
+    pet['category']['name'] = category_name
+    pet['name'] = pet_name
+    pet['photoUrl'] = []
+    pet['photoUrl'].append('')
+    pet['tags'] = []
+    
+    tags = tags.split(';')
+    for tag in tags:
+        tag = tag.split('-')
+        tag_formatada = {}
+        tag_formatada['id'] = int(tag[0])
+        tag_formatada['name'] = tag[1]
+        pet['tags'].append(tag_formatada)
+        
+    pet['status'] = status
+    
+    pet = json.dumps(obj=pet, indent=4)
+    print('\n' + pet)    # visualiza como ficou o json criado dinamicamente 
+    
+    # executa
+    response = requests.post(
+        url=url,
+        headers=headers,
+        data=pet,
+        timeout=5 
+    )
+        
+    # compara
+    response_body = response.json()
+    
+    assert response.status_code == 200
+    assert response_body['id'] == int(pet_id)
+    assert response_body['name'] == pet_name
+    assert response_body['status'] == status
+ 

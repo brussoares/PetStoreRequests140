@@ -1,0 +1,5 @@
+pet_id,category_id,category_name,pet_name,tags,status
+476149402,2,cat,Garfield,1-vacinado;2-vermifugado,available
+476149403,3,fish,Nemo,3-raro,available
+476149404,1,dog,Oggi,2-vermifugado,available
+476149405,4,bird,Garibaldo,3-raro,available

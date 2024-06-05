@@ -12,7 +12,11 @@
       {
         "id": 1,
         "name": "vacinado"
-      }
+      },
+      {
+        "id": 2,
+        "name": "vermifugado"
+      }      
     ],
     "status": "available"
   }
